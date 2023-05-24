@@ -1,4 +1,6 @@
-import kotlinx.cli.*
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.required
 import kotlinx.coroutines.runBlocking
 
 
@@ -26,3 +28,4 @@ fun main(args: Array<String>) = runBlocking {
     } catch (e: Exception) {
         println("Error occurred: ${e.message}")
     }
+}
