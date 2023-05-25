@@ -1,31 +1,19 @@
-import kotlinx.cli.ArgParser
-import kotlinx.cli.ArgType
-import kotlinx.cli.required
-import kotlinx.coroutines.runBlocking
+import kotlinx.cli.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 
-
-fun main(args: Array<String>) = runBlocking {
-    val parser = ArgParser("mempool-cli")
-    val startHeight by parser.option(ArgType.Int, shortName = "s", description = "Start height").required()
-
+suspend fun main(args: Array<String>) {
+    val parser = ArgParser("cli-tool")
+    val startHeight by parser.option(ArgType.Int, shortName = "s", description = "The start height").required()
 
     parser.parse(args)
 
-
-    val mempoolSpace = MempoolSpace()
-    val serialization = Serialization()
-
-
     try {
-        val blockResponse = mempoolSpace.getBlocks(startHeight)
-        val blockId = blockResponse.id
-        val txIds = blockResponse.txids
-
-
-        println("Block ID: $blockId")
-        println("Transaction IDs:")
-        txIds.forEach { txId -> println(txId) }
+        val blockIds = getBlockIds(startHeight)
+        val txIds = getTxIds(blockIds.id)
+        val txIdsJson = Json.encodeToString(TxIds(txIds))
+        println(txIdsJson)
     } catch (e: Exception) {
-        println("Error occurred: ${e.message}")
+        println("Error: ${e.message}")
     }
 }

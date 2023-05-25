@@ -1,19 +1,27 @@
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import java.net.URL
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.serialization.kotlinx.json.*
 
-
-class MempoolSpace {
-    private val json = Json { ignoreUnknownKeys = true }
-
-
-    suspend fun getBlocks(startHeight: Int): BlockResponse {
-        val url = URL("https://mempool.space/api/v1/blocks/$startHeight")
-        val blockJson = url.readText()
-        return json.decodeFromString(BlockResponse.serializer(), blockJson)
+suspend fun getBlockIds(startHeight: Int): BlockIds {
+    val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
     }
+    val response = client.get("https://mempool.space/api/v1/blocks/$startHeight")
+    return Json.decodeFromString(response.toString())
 }
 
-
-@Serializable
-data class BlockResponse(val id: String, val txids: List<String>)
+suspend fun getTxIds(id: String): List<String> {
+    val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+    }
+    val response = client.get("https://mempool.space/api/block/$id/txids")
+    return Json.decodeFromString(response.toString())
+}
