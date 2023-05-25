@@ -1,21 +1,31 @@
-import kotlinx.cli.*
-import java.net.URL
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.required
+import kotlinx.coroutines.runBlocking
 
-fun fetchBlocks(startHeight: Int): String {
-    val url = URL("https://mempool.space/api/blocks/$startHeight")
-    return url.readText()
-}
 
-fun main(args:Array<String>) {
-    val parser = ArgParser("block-explorer")
-    val startHeight by parser.option(
-        ArgType.Int,
-        shortName = "s",
-        description = "Start height of the block"
-    ).required()
+fun main(args: Array<String>) = runBlocking {
+    val parser = ArgParser("mempool-cli")
+    val startHeight by parser.option(ArgType.Int, shortName = "s", description = "Start height").required()
+
 
     parser.parse(args)
 
-    val blocksJson = fetchBlocks(startHeight)
-    println(blocksJson)
+
+    val mempoolSpace = MempoolSpace()
+    val serialization = Serialization()
+
+
+    try {
+        val blockResponse = mempoolSpace.getBlocks(startHeight)
+        val blockId = blockResponse.id
+        val txIds = blockResponse.txids
+
+
+        println("Block ID: $blockId")
+        println("Transaction IDs:")
+        txIds.forEach { txId -> println(txId) }
+    } catch (e: Exception) {
+        println("Error occurred: ${e.message}")
+    }
 }
