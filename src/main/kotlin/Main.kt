@@ -1,19 +1,18 @@
 import kotlinx.cli.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.required
+import kotlinx.coroutines.runBlocking
 
-suspend fun main(args: Array<String>) {
-    val parser = ArgParser("cli-tool")
-    val startHeight by parser.option(ArgType.Int, shortName = "s", description = "The start height").required()
+fun main(args: Array<String>) = runBlocking() {
+    val parser = ArgParser("kotlin-cli")
+    val startHeight by parser.option(ArgType.Int, shortName = "s", description = "Start Height").required()
 
     parser.parse(args)
 
-    try {
-        val blockIds = getBlockIds(startHeight)
-        val txIds = getTxIds(blockIds.data.id)
-        val txIdsJson = Json.encodeToString(TxIds(txIds))
-        println(txIdsJson)
-    } catch (e: Exception) {
-        println("Error: ${e.message}")
-    }
+    val blockIds = fetchFirstBlockId(startHeight)
+    println(blockIds)
+
+    val txid = fetchTransactionId(blockIds)
+    txid.forEach { println(it) }
 }
