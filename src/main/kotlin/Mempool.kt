@@ -17,9 +17,15 @@ suspend fun fetchFirstBlockId(startHeight: Int): String {
         }
     }
 
-    val response = client.get("https://mempool.space/api/v1/blocks/$startHeight").body<List<Block>>().first()
-    return response.id
+    return try {
+        val response = client.get("https://mempool.space/api/v1/blocks/$startHeight").body<List<Block>>().first()
+        response.id
+    } catch (e: Exception) {
+        println("Error fetching first block ID: $e")
+        ""
+    }
 }
+
 suspend fun fetchTransactionId(blockIds: String): Array<String> {
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -29,6 +35,12 @@ suspend fun fetchTransactionId(blockIds: String): Array<String> {
             })
         }
     }
-    val response = client.get("https://mempool.space/api/block/$blockIds/txids").body<Array<String>>()
-    return response
+
+    return try {
+        val response = client.get("https://mempool.space/api/block/$blockIds/txids").body<Array<String>>()
+        response
+    } catch (e: Exception) {
+        println("Error fetching transaction ID: $e")
+        arrayOf()
+    }
 }

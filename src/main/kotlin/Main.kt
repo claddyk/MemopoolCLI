@@ -10,9 +10,14 @@ fun main(args: Array<String>) = runBlocking() {
 
     parser.parse(args)
 
-    val blockIds = fetchFirstBlockId(startHeight)
-    println(blockIds)
+    try {
+        val blockIds = fetchFirstBlockId(startHeight)
+        println(blockIds)
 
-    val txid = fetchTransactionId(blockIds)
-    txid.forEach { println(it) }
+        val txid = fetchTransactionId(blockIds)
+        txid.forEach { println(it) }
+    } catch (e: Exception) {
+        println("Error fetching block ID or transaction ID: $e")
+        kotlin.system.exitProcess(1)
+    }
 }
