@@ -1,4 +1,4 @@
-import kotlinx.cli.*
+
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.required
@@ -10,14 +10,15 @@ fun main(args: Array<String>) = runBlocking() {
 
     parser.parse(args)
 
-    try {
-        val blockIds = fetchFirstBlockId(startHeight)
-        println(blockIds)
+    val apiClient = MempoolClient()
 
-        val txid = fetchTransactionId(blockIds)
-        txid.forEach { println(it) }
-    } catch (e: Exception) {
-        println("Error fetching block ID or transaction ID: $e")
-        kotlin.system.exitProcess(1)
-    }
+    apiClient.fetchFirstBlockId(startHeight).fold(
+        onSuccess = {blockIds ->
+            apiClient.fetchTransactionIds(blockIds).fold(
+                onSuccess = { txIds -> txIds.forEach { println(it) } },
+                onFailure = { e-> println("error fetching transaction IDs: $e") }
+            )
+        },
+        onFailure = { e -> println("error fetching block ID: $e") }
+    )
 }
