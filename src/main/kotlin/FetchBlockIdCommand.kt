@@ -3,17 +3,20 @@ import kotlinx.cli.*
 import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalCli::class)
-class FetchBlockIdCommand(private val apiClient: MempoolClient = MempoolClient()) : Subcommand("fetchBlockId", "Fetch block ID for a given block height") {
-    var startHeight by option(ArgType.Int, shortName = "s", description = "Start Height").required()
+class FetchBlockIdCommand(private val apiClient: MempoolClient = MempoolClient()) :
+    Subcommand("fetchBlockId", "Fetch block ID for a given block height") {
 
-    override fun execute() = runBlocking{
-        val apiClient = MempoolClient()
+    private val startHeight by option(ArgType.Int, shortName = "s", description = "Start Height").required()
+    var result: String = ""
 
-        apiClient.fetchFirstBlockId(startHeight).fold(
-            onSuccess = {blockId ->
-                println(blockId)
-            },
-            onFailure = { e -> println("error fetching block ID: $e") }
-        )
+    override fun execute() = runBlocking {
+        val blockIdResult = apiClient.fetchFirstBlockId(startHeight)
+        result = if (blockIdResult.isSuccess) {
+                        blockIdResult.getOrNull().toString()
+                    }
+                else {
+                        "Error fetching block ID: ${blockIdResult.exceptionOrNull()?.message}"
+                    }
+        println(result)
     }
 }

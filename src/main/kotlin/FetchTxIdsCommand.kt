@@ -3,20 +3,28 @@ import kotlinx.cli.ExperimentalCli
 import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalCli::class)
-class FetchTxIdsCommand : Subcommand("fetchTxIds", "Fetch transaction IDs for a given block height") {
+class FetchTxIdsCommand(private val apiClient: MempoolClient = MempoolClient()) :
+    Subcommand("fetchTxIds", "Fetch transaction IDs for a given block height") {
     private val startHeight by option(ArgType.Int, shortName = "s", description = "Start Height").required()
 
-    override fun execute() = runBlocking {
-        val apiClient = MempoolClient()
+    var txIdsResult: List<String>? = null
+    var error: String? = null
 
-        apiClient.fetchFirstBlockId(startHeight).fold(
-            onSuccess = { blockIds ->
-                apiClient.fetchTransactionIds(blockIds).fold(
-                    onSuccess = { txIds -> txIds.forEach { println(it) } },
-                    onFailure = { e -> println("error fetching transaction IDs: $e") }
-                )
-            },
-            onFailure = { e -> println("error fetching block ID: $e") }
-        )
+    override fun execute() = runBlocking {
+        val blockIdResult = apiClient.fetchFirstBlockId(startHeight)
+        if (blockIdResult.isSuccess) {
+            val blockId = blockIdResult.getOrNull().toString()
+            val txIdResult = apiClient.fetchTransactionIds(blockId)
+            if (txIdResult.isSuccess) {
+                txIdsResult = txIdResult.getOrNull()
+                println(txIdsResult?.joinToString("\n"))
+            } else {
+                error = "Error fetching transaction IDs: ${txIdResult.exceptionOrNull()?.message}"
+                println(error)
+            }
+        } else {
+            error = "Error fetching block ID: ${blockIdResult.exceptionOrNull()?.message}"
+            println(error)
+        }
     }
 }
