@@ -3,7 +3,7 @@ import kotlinx.cli.ExperimentalCli
 import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalCli::class)
-class FetchTxIdsCommand(private val apiClient: MempoolClient = MempoolClient()) :
+class FetchTxIdsCommand(private val apiClient: MempoolClient) :
     Subcommand("fetchTxIds", "Fetch transaction IDs for a given block height") {
     private val startHeight by option(ArgType.Int, shortName = "s", description = "Start Height").required()
 

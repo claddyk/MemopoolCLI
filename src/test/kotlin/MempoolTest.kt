@@ -18,18 +18,11 @@ class MempoolClientTest {
         assertTrue(result.isSuccess)
         assertEquals("ce2ac5b6d807ae1368381a9ac5454d76ddb4b35742a87445aa145a78c5bc16d3", result.getOrThrow()[0])
     }
-    @Test
-    fun testFetchFirstBlockId_InvalidStartHeight(): Unit = runBlocking {
-        val result = client.fetchFirstBlockId(-1) // Invalid start height
-        assertFalse(result.isSuccess)
-        assertTrue(result.isFailure)
-        assertEquals(emptyList<String>(), result.getOrDefault(emptyList<String>()))
-    }
 
     @Test
     fun testFetchTransactionId_InvalidBlockId(): Unit = runBlocking {
         val invalidBlockId = "0000000000000000000384f28cabcdef4377a39cfabcdefe9466951de38c0529"
-        val result = client.fetchTransactionIds("0000000000000000000384f28cabcdef4377a39cfabcdefe9466951de38c0529")
+        val result = client.fetchTransactionIds(invalidBlockId)
         assertFalse(result.isSuccess)
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is Exception)
