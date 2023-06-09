@@ -4,6 +4,12 @@ interface IResultWriter {
 }
 
 class ConsoleResultWriter : IResultWriter {
-    override fun writeSuccess(result: String) = println(result)
-    override fun writeError(message: String) = println(message)
+    override fun writeSuccess(result: String) {
+        println(result)
+    }
+
+    override fun writeError(message: String) {
+        println("Error: $message")
+    }
 }
+
