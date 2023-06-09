@@ -1,6 +1,4 @@
 import kotlinx.cli.*
-import IMempoolClient
-import IResultWriter
 @OptIn(ExperimentalCli::class)
 fun main(args: Array<String>) {
 
