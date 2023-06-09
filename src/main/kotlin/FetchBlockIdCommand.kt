@@ -5,7 +5,7 @@ import kotlinx.coroutines.runBlocking
 @OptIn(ExperimentalCli::class)
 class FetchBlockIdCommand(
     private val resultWriter: IResultWriter,
-    private val apiClient: MempoolClient
+    private val apiClient: IMempoolClient
 ) :
     Subcommand("fetchBlockId", "Fetch block ID for a given block height") {
     private var startHeight by option(ArgType.Int, shortName = "s", description = "Start Height").required()
