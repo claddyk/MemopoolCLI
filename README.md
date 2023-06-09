@@ -57,7 +57,19 @@ The options are of adding value of startHeight, whose shortName is s.
 
 For example,
 ```bash
-    java -jar build/libs/your-project.jar fetchBlockId -s 12345
+    java -jar build/libs/your-project.jar fetchBlockId -s 730000
+```
+
+### Alternate Method to Run
+
+You can run the CLI tool using Gradle's run task.
+```bash
+    ./gradlew run --args='[command] [options]'
+```
+
+For example,
+```bash
+    ./gradlew run --args='fetchTxIds -s 730000'
 ```
 
 ### Running tests
