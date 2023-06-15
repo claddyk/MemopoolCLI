@@ -80,17 +80,17 @@ That's it! You should now be able to build the project and run the CLI tool with
 `./gradlew installDist`
 - The above command will create script in the build/install directory, and we can use them to run the application like a command line tool.
 - Source the script correctly in the .bashrc file by adding the following line
-`source /your/path/to/kotlin-cli-completion.sh`
+`source /your/path/to/mempool-cli.bash-completion`
 - In my case for example, the line looks like:
-`source /home/claddy/Documents/Projects/MempoolCLI/kotlin-cli-completion.sh`
+`source /home/claddy/Documents/Projects/MempoolCLI/contrib/mempool-cli.bash-completion`
 - Now, set an Alias, by adding the following line
 `alias kotlin-cli="/path/to/your/build/install/mac/bin/your-application-name" `
 - On my case for example, the line looks like,
-`alias kotlin-cli="/home/claddy/Documents/Projects/MempoolCLI/build/install/mac/bin/mac" `
+`alias mempool-cli="/home/claddy/Documents/Projects/MempoolCLI/build/install/mac/bin/mac" `
 - Finally, source the file 
 `source ~/.bashrc`
 - Now run the command 
- `kotlin-cli fetchBlockId -s 730000`
+ `mempool-cli fetchBlockId -s 730000`
 - Use `Tab` button to play around the auto completion.
 
 ## Support
