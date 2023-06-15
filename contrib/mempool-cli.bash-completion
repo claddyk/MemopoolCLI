@@ -1,4 +1,7 @@
 # mempool-cli.bash-completion
+# Tutorials used:
+# https://askubuntu.com/questions/68175/how-to-create-script-with-auto-complete
+# https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial
 
 _mempool_cli_completion() {
     local cur prev opts subopts
