@@ -1,6 +1,4 @@
-
-import kotlinx.cli.ArgParser
-import kotlinx.cli.ExperimentalCli
+import kotlinx.cli.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
