@@ -1,0 +1,38 @@
+# mempool-cli.bash-completion
+# Tutorials used:
+# https://askubuntu.com/questions/68175/how-to-create-script-with-auto-complete
+# https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial
+
+_mempool_cli_completion() {
+    local cur prev opts subopts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="fetchBlockId fetchTxIds"
+
+    if [[ ${cur} == -* ]]; then
+        subopts="-s"
+        COMPREPLY=( $(compgen -W "${subopts}" -- ${cur}) )
+        return 0
+    fi
+
+    case "${prev}" in
+        fetchBlockId)
+            subopts="-s"
+            COMPREPLY=( $(compgen -W "${subopts}" -- ${cur}) )
+            return 0
+            ;;
+        fetchTxIds)
+            subopts="-s"
+            COMPREPLY=( $(compgen -W "${subopts}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+            ;;
+    esac
+
+    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+    return 0
+}
+
+complete -F _mempool_cli_completion mempool-cli

@@ -11,6 +11,6 @@ class DummyMempoolClient : IMempoolClient {
 }
 
 class FailingMempoolClient(private val failure: Throwable) : IMempoolClient {
-    override suspend fun fetchFirstBlockId(startHeight: Int): Result<String> = throw failure
-    override suspend fun fetchTransactionIds(blockId: String): Result<List<String>> = throw failure
+    override suspend fun fetchFirstBlockId(startHeight: Int): Result<String> = Result.failure(failure)
+    override suspend fun fetchTransactionIds(blockId: String): Result<List<String>> = Result.failure(failure)
 }

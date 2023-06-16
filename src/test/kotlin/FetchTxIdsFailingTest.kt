@@ -1,19 +1,23 @@
 import kotlinx.cli.*
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-import kotlin.test.assertNotNull
 
 @OptIn(ExperimentalCli::class)
 class FetchTxIdsCommandFailingTest {
 
     @Test
-    fun `test execute fetchTxIdsCommand with failing client`() {
+    fun `test execute fetchBlockIdCommand with failing client`() = runBlocking {
         val resultWriter = DummyResultWriter()
         val failingClient = FailingMempoolClient(RuntimeException("Mocked failure"))
-        val command = FetchTxIdsCommand(resultWriter, failingClient)
+
+        val command = FetchBlockIdCommand(resultWriter, failingClient)
         val parser = ArgParser("test")
         parser.subcommands(command)
-        parser.parse(arrayOf("fetchTxIds", "-s", "730000"))
-
-        assertNotNull(resultWriter.lastError, "An error should have been written")
+        parser.parse(arrayOf("fetchBlockId", "-s", "730000"))
+        Assertions.assertNull(resultWriter.lastResult)
+        assertNotNull(resultWriter.lastError)
+        Assertions.assertEquals("Error fetching block ID: Mocked failure", resultWriter.lastError)
     }
 }

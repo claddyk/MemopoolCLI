@@ -34,13 +34,25 @@ Before building and running the project, ensure that you have the following prer
 * Build the project using Gradle:
 
 ```bash
-  gradle build
+  ./gradlew build
 ```
 This command compiles the source code, runs tests, and generates the executable JAR file.
 
 ### Running the CLI Tool
 
-Once you have built the project, you can run the CLI tool using the following command:
+You can run the CLI tool using Gradle's run task.
+```bash
+    ./gradlew run --args='[command] [options]'
+```
+
+For example,
+```bash
+    ./gradlew run --args='fetchTxIds -s 730000'
+```
+
+### Alternate Method to Run
+
+You can run the CLI tool using the following command:
 
 ```bash
   java -jar build/libs/your-project.jar [command] [options]
@@ -60,27 +72,26 @@ For example,
     java -jar build/libs/your-project.jar fetchBlockId -s 730000
 ```
 
-### Alternate Method to Run
-
-You can run the CLI tool using Gradle's run task.
-```bash
-    ./gradlew run --args='[command] [options]'
-```
-
-For example,
-```bash
-    ./gradlew run --args='fetchTxIds -s 730000'
-```
-
-### Running tests
-To execute the project tests, use the following command:
-
-```bash
-    gradle test
-```
-
 That's it! You should now be able to build the project and run the CLI tool with the specified commands and options.
 
+### Guide for adding auto-completion:
+
+- Run the command 
+`./gradlew installDist`
+- The above command will create script in the build/install directory, and we can use them to run the application like a command line tool.
+- Source the script correctly in the .bashrc file by adding the following line
+`source /your/path/to/mempool-cli.bash-completion`
+- In my case for example, the line looks like:
+`source /home/claddy/Documents/Projects/MempoolCLI/contrib/mempool-cli.bash-completion`
+- Now, set an Alias, by adding the following line
+`alias kotlin-cli="/path/to/your/build/install/mac/bin/your-application-name" `
+- On my case for example, the line looks like,
+`alias mempool-cli="/home/claddy/Documents/Projects/MempoolCLI/build/install/mac/bin/mac" `
+- Finally, source the file 
+`source ~/.bashrc`
+- Now run the command 
+ `mempool-cli fetchBlockId -s 730000`
+- Use `Tab` button to play around the auto completion.
 
 ## Support
 
